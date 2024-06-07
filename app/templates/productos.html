@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5 bg-body-tertiary rounded">
+    <h1>Productos</h1>
+    <form id="filter-form" method="get" action="{% url 'productos' %}">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="categoria" class="form-label">Categoría</label>
+                <select id="categoria" name="categoria" class="form-select">
+                    <option value="">Todas</option>
+                    {% for key, value in categorias %}
+                        <option value="{{ key }}" {% if selected_categoria == key %}selected{% endif %}>{{ value }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Buscar por nombre" value="{{ selected_nombre }}">
+            </div>
+            <div class="col buscar">
+                <div class="row-md-6">
+                    <button type="submit" class="btn btn-purple">Buscar</button>
+                    <a class="btn btn-secondary" href="/productos">Limpiar Filtros</a>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="row mt-4">
+        {% if page_obj.object_list %}
+            {% for producto in page_obj %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <img src="{{ producto.imagen.url }}" class="card-img-top object-fit-cover" alt="{{ producto.nombre }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ producto.nombre }}</h5>
+                            <h6 class="card-text mb-1">{{ producto.get_categoria_display }}</h6>
+                            <p class="card-text">Material: {{ producto.material }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-warning" role="alert">
+                    No se encontraron productos que coincidan con tu búsqueda.
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Paginación -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{% if selected_categoria %}&categoria={{ selected_categoria }}{% endif %}{% if selected_nombre %}&nombre={{ selected_nombre }}{% endif %}" aria-label="Primero">
+                        <span aria-hidden="true">&laquo;&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if selected_categoria %}&categoria={{ selected_categoria }}{% endif %}{% if selected_nombre %}&nombre={{ selected_nombre }}{% endif %}" aria-label="Anterior">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li class="page-item mb-2"><span class="page-link page-btn">{{ num }}</span></li>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li class="page-item mb-2"><a class="page-link" href="?page={{ num }}{% if selected_categoria %}&categoria={{ selected_categoria }}{% endif %}{% if selected_nombre %}&nombre={{ selected_nombre }}{% endif %}">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item mb-2">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if selected_categoria %}&categoria={{ selected_categoria }}{% endif %}{% if selected_nombre %}&nombre={{ selected_nombre }}{% endif %}" aria-label="Siguiente">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                <li class="page-item mb-2">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if selected_categoria %}&categoria={{ selected_categoria }}{% endif %}{% if selected_nombre %}&nombre={{ selected_nombre }}{% endif %}" aria-label="Último">
+                        <span aria-hidden="true">&raquo;&raquo;</span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}

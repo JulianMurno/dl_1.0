@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-5 bg-body-tertiary rounded">
+    <div class="jumbotron text-center">
+        <h1 class="display-4">Bienvenido a Dulce Lavanda</h1>
+        <p>Explora nuestros productos y conoce más sobre nosotros.</p>
+        <a class="btn btn-purple btn-lg" href="/productos">Ver productos</a>
+        <hr class="my-4">
+    </div>
+
+    <h1>Lo más vendido</h1>
+    <div class="row mt-5">
+        {% for producto in productos_mas_vendidos %}
+            {% if forloop.counter0|divisibleby:4 %}
+                <div class="card-group w-100 {% if forloop.first %}active{% endif %}">
+                    <div class="row">
+            {% endif %}
+                        <div class="col-md-3 mb-3 card-home">
+                            <div class="card rounded">
+                                <img src="{{ producto.imagen.url }}" class="card-img-top" alt="{{ producto.nombre }}">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ producto.nombre }}</h5>
+                                    <h6 class="card-text">{{ producto.categoria }}</h6>
+                                    <p class="card-text">Precio: ${{ producto.precio_contado }}</p>
+                                </div>
+                            </div>
+                        </div>
+            {% if forloop.counter|divisibleby:4 or forloop.last %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <a class="btn btn-purple mt-3 ver-mas" href="/productos" role="button">Ver más &raquo;</a>
+    <hr class="my-4">
+
+    <h1>Ofertas</h1>
+    <div class="row mt-5">
+        {% for producto in productos_oferta %}
+            {% if forloop.counter0|divisibleby:4 %}
+                <div class="card-group me-3 w-100 {% if forloop.first %}active{% endif %}">
+                    <div class="row">
+            {% endif %}
+                        <div class="col-md-3 mb-3 card-home">
+                            <div class="card  rounded">
+                                <img src="{{ producto.imagen.url }}" class="card-img-top" alt="{{ producto.nombre }}">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ producto.nombre }}</h5>
+                                    <h6 class="card-text">{{ producto.categoria }}</h6>
+                                    <p class="card-text">Precio: ${{ producto.precio_contado }}</p>
+                                </div>
+                            </div>
+                        </div>
+            {% if forloop.counter|divisibleby:4 or forloop.last %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <a class="btn btn-purple mt-3  ver-mas" href="/productos/?es_oferta=True" role="button">Ver más &raquo;</a>
+</div>
+{% endblock %}
