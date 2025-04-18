@@ -3,26 +3,43 @@
 {% block content %}
 <div class="container mt-5 bg-body-tertiary rounded">
     <div class="jumbotron text-center">
-        <h1 class="display-4">Bienvenido a Dulce Lavanda</h1>
+        <h1 class="display-4" style="font-weight: 400;">Bienvenido a Dulce Lavanda</h1>
         <p>Explora nuestros productos y conoce más sobre nosotros.</p>
-        <a class="btn btn-purple btn-lg" href="/productos">Ver productos</a>
+        <a class="btn btn-purple btn-lg" href="/productos">VER PRODUCTOS</a>
         <hr class="my-4">
     </div>
 
-    <h1>Lo más vendido</h1>
-    <div class="row mt-5">
+    <h1>LOS MÁS VENDIDOS</h1>
+    <div class="row mt-5 justify-content-center">
         {% for producto in productos_mas_vendidos %}
             {% if forloop.counter0|divisibleby:4 %}
                 <div class="card-group w-100 {% if forloop.first %}active{% endif %}">
-                    <div class="row">
+                    <div class="row justify-content-center">
             {% endif %}
-                        <div class="col-md-3 mb-3 card-home">
-                            <div class="card rounded">
-                                <img src="{{ producto.imagen.url }}" class="card-img-top" alt="{{ producto.nombre }}">
+                        <div class="col-12 col-sm-6 col-md-3 mb-3 card-home">
+                            <div class="card rounded position-relative">
+                                {% if producto.esta_agotado %}
+                                    <span class="badge bg-danger position-absolute top-0 end-0 m-2">Agotado</span>
+                                {% endif %}
+                                {% if producto.es_oferta %}
+                                    <span class="badge bg-success text-bg-success position-absolute top-0 start-0 m-2">OFERTA</span>
+                                {% endif %}
+                                <img src="{{ producto.imagen.url }}" class="card-img-top" alt="Imagen de {{ producto.nombre }}">
                                 <div class="card-body">
-                                    <h5 class="card-title">{{ producto.nombre }}</h5>
-                                    <h6 class="card-text">{{ producto.categoria }}</h6>
-                                    <p class="card-text">Precio: ${{ producto.precio_contado }}</p>
+                                    <h5 class="card-title" style="font-weight: bold; text-transform: uppercase;">{{ producto.nombre }}</h5>
+                                    <h6 class="card-text" style="font-weight: 400;">{{ producto.categoria }}</h6>
+                                    {% if producto.esta_agotado %}
+                                        <p class="card-text">
+                                            <span class="badge bg-danger">Agotado</span>
+                                        </p>
+                                        <button type="button" class="btn btn-purple" disabled>VER MÁS</button>
+                                    {% else %}
+                                        <p class="card-text">
+                                            <p style="color: #6f42c1; font-weight: bold;">CONTADO: ${{ producto.precio_contado }}</p>
+                                            <p style="color: #6f42c1; font-weight: 400;">LISTA: ${{ producto.precio_lista }}</p>
+                                        </p>
+                                        <a  href="{% url 'detalle_producto' producto.id %}"><button type="button" class="btn btn-purple">VER MÁS</button></a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -32,23 +49,40 @@
             {% endif %}
         {% endfor %}
     </div>
-    <a class="btn btn-purple mt-3 ver-mas" href="/productos" role="button">Ver más &raquo;</a>
+    <a class="btn btn-purple mt-3 ver-mas" href="/productos" role="button">MÁS PRODUCTOS &raquo;</a>
     <hr class="my-4">
 
-    <h1>Ofertas</h1>
-    <div class="row mt-5">
+    <h1>OFERTAS</h1>
+    <div class="row mt-5 justify-content-center">
         {% for producto in productos_oferta %}
             {% if forloop.counter0|divisibleby:4 %}
                 <div class="card-group me-3 w-100 {% if forloop.first %}active{% endif %}">
-                    <div class="row">
+                    <div class="row justify-content-center">
             {% endif %}
-                        <div class="col-md-3 mb-3 card-home">
-                            <div class="card  rounded">
-                                <img src="{{ producto.imagen.url }}" class="card-img-top" alt="{{ producto.nombre }}">
+                        <div class="col-12 col-sm-6 col-md-3 mb-3 card-home">
+                            <div class="card rounded position-relative">
+                                {% if producto.esta_agotado %}
+                                    <span class="badge bg-danger position-absolute top-0 end-0 m-2">AGOTADO</span>
+                                {% endif %}
+                                {% if producto.es_oferta %}
+                                    <span class="badge bg-success text-bg-success position-absolute top-0 start-0 m-2">OFERTA</span>
+                                {% endif %}
+                                <img src="{{ producto.imagen.url }}" class="card-img-top" alt="Imagen de {{ producto.nombre }}">
                                 <div class="card-body">
-                                    <h5 class="card-title">{{ producto.nombre }}</h5>
-                                    <h6 class="card-text">{{ producto.categoria }}</h6>
-                                    <p class="card-text">Precio: ${{ producto.precio_contado }}</p>
+                                    <h5 class="card-title" style="font-weight: bold; text-transform: uppercase;">{{ producto.nombre }}</h5>
+                                    <h6 class="card-text" style="font-weight: 400;">{{ producto.categoria }}</h6>
+                                    {% if producto.esta_agotado %}
+                                        <p class="card-text">
+                                            <span class="badge bg-danger">Agotado</span>
+                                        </p>
+                                        <button type="button" class="btn btn-purple" disabled>VER MÁS</button>
+                                    {% else %}
+                                        <p class="card-text">
+                                            <span style="color: #6f42c1; font-weight: bold;">CONTADO: ${{ producto.precio_contado }}</span>
+                                            <span style="color: #6f42c1; font-weight: 400;">LISTA: ${{ producto.precio_lista }}</span>
+                                        </p>
+                                        <a  href="{% url 'detalle_producto' producto.id %}"><button type="button" class="btn btn-purple">VER MÁS</button></a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -58,6 +92,6 @@
             {% endif %}
         {% endfor %}
     </div>
-    <a class="btn btn-purple mt-3  ver-mas" href="/productos/?es_oferta=True" role="button">Ver más &raquo;</a>
+    <a class="btn btn-purple mt-3 ver-mas" href="/productos/?es_oferta=True" role="button">MÁS PRODUCTOS &raquo;</a>
 </div>
 {% endblock %}

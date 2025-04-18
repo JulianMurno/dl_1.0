@@ -30,11 +30,28 @@
             {% for producto in page_obj %}
                 <div class="col-md-4 mb-4">
                     <div class="card h-100">
-                        <img src="{{ producto.imagen.url }}" class="card-img-top object-fit-cover" alt="{{ producto.nombre }}">
+                        {% if producto.esta_agotado %}
+                            <span class="badge bg-danger position-absolute top-0 end-0 m-2">AGOTADO</span>
+                        {% endif %}
+                        {% if producto.es_oferta %}
+                            <span class="badge bg-success text-bg-success position-absolute top-0 start-0 m-2">OFERTA</span>
+                        {% endif %}
+                        <img src="{{ producto.imagen.url }}" class="card-img-top" alt="Imagen de {{ producto.nombre }}">
                         <div class="card-body">
-                            <h5 class="card-title">{{ producto.nombre }}</h5>
-                            <h6 class="card-text mb-1">{{ producto.get_categoria_display }}</h6>
-                            <p class="card-text">Material: {{ producto.material }}</p>
+                            <h5 class="card-title" style="font-weight: bold; text-transform: uppercase;">{{ producto.nombre }}</h5>
+                            <h6 class="card-text" style="font-weight: 400;">{{ producto.categoria }}</h6>
+                            {% if producto.esta_agotado %}
+                                <p class="card-text">
+                                    <span class="badge bg-danger">Agotado</span>
+                                </p>
+                                <button type="button" class="btn btn-purple" disabled>Ver más</button>
+                            {% else %}
+                                <p class="card-text">
+                                    <p style="color: #6f42c1; font-weight: bold;">CONTADO: ${{ producto.precio_contado }}</p>
+                                    <p style="color: #6f42c1; font-weight: 400;">LISTA: ${{ producto.precio_lista }}</p>
+                                </p>
+                                <a  href="{% url 'detalle_producto' producto.id %}"><button type="button" class="btn btn-purple">VER MÁS</button></a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

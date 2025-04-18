@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container mt-5 carrito">
+  <h2 class="mb-4 fw-bold">
+    <i class="fa-solid fa-cart-shopping" style="color: #ac50e1;"></i> Carrito de compras
+  </h2>
+
+  {% if productos_en_carrito %}
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle text-center">
+        <thead class="table-light">
+          <tr>
+            <th>PRODUCTO</th>
+            <th>PRECIO</th>
+            <th>CANTIDAD</th>
+            <th>SUBTOTAL</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in productos_en_carrito %}
+          <tr>
+            <td style="font-weight: bold; text-transform: uppercase;">{{ item.producto.nombre }}</td>
+            <td>${{ item.producto.precio_contado }}</td>
+            <td>
+              <div class="d-flex align-items-center justify-content-center gap-2">
+                <span>{{ item.cantidad }}</span>
+                <a href="{% url 'quitar_del_carrito' item.producto.id %}" class="btn btn-sm btn-danger">
+                  <i class="fa-solid fa-x"></i>
+                </a>
+              </div>
+            </td>            
+            <td><strong>${{ item.subtotal|floatformat:"2" }}</strong></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="text-end fs-5 mt-4">
+      <p><strong>Total:</strong> ${{ total|floatformat:"2" }}</p>
+      <a href="{% url 'checkout' %}" class="btn btn-success mt-3">
+        <i class="fa-solid fa-cash-register pe-1"></i> Finalizar compra
+      </a>
+    </div>
+  {% else %}
+    <p class="text-muted">El carrito está vacío.</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -28,6 +28,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('productos/', views.productos, name='productos'),
     path('', views.home, name='home'),
+    path('producto/<int:producto_id>/', views.detalle_producto, name='detalle_producto'),
+    path('agregar-al-carrito/<int:producto_id>/', views.agregar_al_carrito, name='agregar_al_carrito'),
+    path('carrito/', views.carrito, name='carrito'),
+    path('carrito/quitar/<int:producto_id>/', views.quitar_del_carrito, name='quitar_del_carrito'),
+    path('checkout/', views.checkout, name='checkout'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 handler404 = 'app.views.custom_404'

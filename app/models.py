@@ -6,9 +6,9 @@ class Producto(models.Model):
         ('Acolchado', 'Acolchado'),
         ('Bebe', 'Linea Bebé'),
         ('Hogar', 'Cocina'),
-        ('Alimentación', 'Sábanas'),
-        ('Juguetes', 'Accesorios'),
-        ('Toallas', 'Toallas y Toallones'),
+        ('Sábanas', 'Sábanas'),
+        ('Accesorios', 'Accesorios'),
+        ('Toallas y Toallones', 'Toallas y Toallones'),
         ('Bano', 'Baño'),
         ('Almohadas', 'Almohadas'),
         ('Cortinas', 'Cortinas'),
@@ -35,3 +35,8 @@ class Producto(models.Model):
 
     def get_categoria_display(self):
         return dict(self.CATEGORIAS_CHOICES).get(self.categoria)
+
+
+    @property
+    def esta_agotado(self):
+        return self.tiene_stock == "Sin stock" or self.precio_contado is None or self.precio_lista is None
